@@ -64,12 +64,11 @@ class CityTest extends PHPUnit_Framework_TestCase
         $currentCity->placeAlien(new Alien('Vagrant'));
         $occupiedCity = new City('B');
         $occupiedCity->placeAlien(new Alien('Resident'));
+        $currentCity->moveAlienTo($occupiedCity);
 
-        $events = $currentCity->moveAlienTo($occupiedCity);
+        $events = $occupiedCity->alienArrives(new Alien('Vagrant'));
         $this->assertEquals(
             [
-                'Alien Vagrant left city A',
-                'Alien Vagrant reached city B',
                 'Alien Vagrant fights Alien Resident in city B',
                 'Alien Vagrant has won the possession of city B',
             ],
