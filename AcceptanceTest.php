@@ -105,7 +105,9 @@ class City
         if (!$this->alien) {
             throw new AlienNotPresent($nextCity);
         }
-        $nextCity->alien = $this->alien;
+        if (!$nextCity->alien) {
+            $nextCity->alien = $this->alien;
+        }
         $this->alien = null;
         return [
             "Alien {$nextCity->alien} left city {$this}",
