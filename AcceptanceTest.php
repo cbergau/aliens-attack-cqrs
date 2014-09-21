@@ -74,8 +74,9 @@ class City
     public function moveAlienTo(City $nextCity)
     {
         $nextCity->alien = $this->alien;
+        $this->alien = null;
         return [
-            "Alien {$this->alien} moved to city $nextCity",
+            "Alien {$nextCity->alien} moved to city $nextCity",
         ];
     }
 }
