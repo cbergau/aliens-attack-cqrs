@@ -112,6 +112,14 @@ class City
             "Alien {$nextCity->alien} reached city {$nextCity}",
         ];
     }
+
+    public function alienArrives(Alien $incoming)
+    {
+        return [
+            "Alien {$incoming} fights Alien {$this->alien} in city {$this}",
+            //'Alien Vagrant has won the possession of city B',
+        ];
+    }
 }
 
 class Alien
