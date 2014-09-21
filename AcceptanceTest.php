@@ -17,16 +17,9 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
 
 class Map
 {
-    private $names;
-    
     public static function singleCity($name)
     {
-        return new self([$name]);
-    }
-    
-    private function __construct($names)
-    {
-        $this->names = $names;
+        return new self();
     }
 
     public function placeAlien(Alien $alien, $cityName)
