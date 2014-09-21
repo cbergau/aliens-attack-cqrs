@@ -1,0 +1,11 @@
+Current task: Domain Modeling
+- acceptance test that ties together the work of movement and fight
+- alienArrives does not leave the winning Alien in the City so that he can start moving again at the next turn
+- alienArrives must deal with the case where the city was empty before. We may need another Event, AlienConflict?
+-- or the change in state of City::$alien must be made in City::alienArrives(), changing the transactional boundaries this way:
+--- MoveAlien Command -> AlienLeftCity, AlienReachedCity Events
+--- AlienReachedCity Event -> AlienArrives Command -> AliensFightStarted, AlienWonFight Events
+
+Features
+- Aliens move at random between connected cities
+- Aliens win at random
