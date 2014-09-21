@@ -33,6 +33,7 @@ class CityTest extends PHPUnit_Framework_TestCase
 class City
 {
     private $name;
+    private $alien;
     
     public function __construct($name)
     {
@@ -46,9 +47,18 @@ class City
 
     public function placeAlien(Alien $alien)
     {
+        $this->alien = $alien;
         return [
             "Alien $alien starts at {$this->name}",
         ];    
+    }
+
+    // TODO: try self $nextCity
+    public function moveAlienTo(City $nextCity)
+    {
+        return [
+            "Alien {$this->alien} moved to city $nextCity",
+        ];
     }
 }
 
