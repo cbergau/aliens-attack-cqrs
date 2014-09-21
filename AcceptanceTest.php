@@ -32,12 +32,22 @@ class Map
     public function placeAlien(Alien $alien, $cityName)
     {
         return [
-            'Alien 1 starts at A',
+            "Alien $alien starts at {$cityName}",
         ];    
     }
 }
 
 class Alien
 {
+    private $name;
+    
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
 }
