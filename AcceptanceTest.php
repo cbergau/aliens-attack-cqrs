@@ -28,6 +28,23 @@ class CityTest extends PHPUnit_Framework_TestCase
             $events
         );
     }
+
+    public function testAnAlienCanMoveForMoreThanOneTurn()
+    {
+        $pastCity = new City('A');
+        $pastCity->placeAlien(new Alien(1));
+        $currentCity = new City('B');
+        $pastCity->moveAlienTo($currentCity);
+        $nextCity = new City('C');
+
+        $events = $currentCity->moveAlienTo($nextCity);
+        $this->assertEquals(
+            [
+                'Alien 1 moved to city C',
+            ],
+            $events
+        );
+    }
 }
 
 class City
@@ -56,6 +73,7 @@ class City
     // TODO: try self $nextCity
     public function moveAlienTo(City $nextCity)
     {
+        $nextCity->alien = $this->alien;
         return [
             "Alien {$this->alien} moved to city $nextCity",
         ];
