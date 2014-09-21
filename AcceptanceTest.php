@@ -70,7 +70,7 @@ class CityTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'Alien Vagrant fights Alien Resident in city B',
-                'Alien Vagrant has won the possession of city B',
+                'Alien Vagrant has won the possession of city B from Resident',
             ],
             $events
         );
@@ -119,7 +119,7 @@ class City
     {
         return [
             "Alien {$incoming} fights Alien {$this->alien} in city {$this}",
-            "Alien {$incoming} has won the possession of city {$this}",
+            "Alien {$incoming} has won the possession of city {$this} from {$this->alien}",
         ];
     }
 }
