@@ -71,7 +71,7 @@ class CityTest extends PHPUnit_Framework_TestCase
                 'Alien Vagrant left city A',
                 'Alien Vagrant reached city B',
                 'Alien Vagrant fights Alien Resident in city B',
-                'Who wins?',
+                'Alien Vagrant has won the possession of city B',
             ],
             $events
         );
