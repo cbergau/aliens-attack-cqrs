@@ -57,6 +57,25 @@ class CityTest extends PHPUnit_Framework_TestCase
         $this->setExpectedException('AlienNotPresent');
         $currentCity->moveAlienTo(new City('C'));
     }
+
+    public function testAnAlienArrivingAtAnOccupiedCityFightsWithAnotherAlien()
+    {
+        $currentCity = new City('A');
+        $currentCity->placeAlien(new Alien('Vagrant'));
+        $occupiedCity = new City('B');
+        $occupiedCity->placeAlien(new Alien('Resident'));
+
+        $events = $currentCity->moveAlienTo($occupiedCity);
+        $this->assertEquals(
+            [
+                'Alien Vagrant left city A',
+                'Alien Vagrant reached city B',
+                'Alien Vagrant fights Alien Resident in city B',
+                'Who wins?',
+            ],
+            $events
+        );
+    }
 }
 
 class City
