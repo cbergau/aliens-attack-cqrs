@@ -47,6 +47,16 @@ class CityTest extends PHPUnit_Framework_TestCase
             $events
         );
     }
+
+    public function testAnAlienCannotBeInTwoPlaces()
+    {
+        $currentCity = new City('A');
+        $currentCity->placeAlien(new Alien(1));
+        $currentCity->moveAlienTo(new City('B'));
+
+        $this->setExpectedException('AlienNotPresent');
+        $currentCity->moveAlienTo(new City('C'));
+    }
 }
 
 class City
@@ -75,6 +85,9 @@ class City
     // TODO: try self $nextCity
     public function moveAlienTo(City $nextCity)
     {
+        if (!$this->alien) {
+            throw new AlienNotPresent($nextCity);
+        }
         $nextCity->alien = $this->alien;
         $this->alien = null;
         return [
@@ -97,4 +110,8 @@ class Alien
     {
         return (string) $this->name;
     }
+}
+
+class AlienNotPresent extends LogicException
+{
 }
