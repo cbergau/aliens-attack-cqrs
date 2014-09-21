@@ -13,6 +13,21 @@ class CityTest extends PHPUnit_Framework_TestCase
             $events
         );
     }
+
+    public function testAnAlienCanMoveToAnotherCity()
+    {
+        $currentCity = new City('A');
+        $currentCity->placeAlien(new Alien(1));
+        $nextCity = new City('B');
+
+        $events = $currentCity->moveAlienTo($nextCity);
+        $this->assertEquals(
+            [
+                'Alien 1 moved to city B',
+            ],
+            $events
+        );
+    }
 }
 
 class City
