@@ -82,8 +82,7 @@ class City
         ];    
     }
 
-    // TODO: try self $nextCity
-    public function moveAlienTo(City $nextCity)
+    public function moveAlienTo(self $nextCity)
     {
         if (!$this->alien) {
             throw new AlienNotPresent($nextCity);
