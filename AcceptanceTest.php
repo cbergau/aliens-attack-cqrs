@@ -1,11 +1,11 @@
 <?php
 
-class AcceptanceTest extends PHPUnit_Framework_TestCase
+class CityTest extends PHPUnit_Framework_TestCase
 {
     public function testAliensStartFromACity()
     {
-        $map = Map::singleCity('A');
-        $events = $map->placeAlien(new Alien(1), 'A');
+        $city = new City('A');
+        $events = $city->placeAlien(new Alien(1));
         $this->assertEquals(
             [
                 'Alien 1 starts at A',
@@ -15,17 +15,24 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class Map
+class City
 {
-    public static function singleCity($name)
+    private $name;
+    
+    public function __construct($name)
     {
-        return new self();
+        $this->name = $name;
     }
 
-    public function placeAlien(Alien $alien, $cityName)
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
+
+    public function placeAlien(Alien $alien)
     {
         return [
-            "Alien $alien starts at {$cityName}",
+            "Alien $alien starts at {$this->name}",
         ];    
     }
 }
