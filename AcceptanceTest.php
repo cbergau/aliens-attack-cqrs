@@ -23,7 +23,8 @@ class CityTest extends PHPUnit_Framework_TestCase
         $events = $currentCity->moveAlienTo($nextCity);
         $this->assertEquals(
             [
-                'Alien 1 moved to city B',
+                'Alien 1 left city A',
+                'Alien 1 reached city B',
             ],
             $events
         );
@@ -40,7 +41,8 @@ class CityTest extends PHPUnit_Framework_TestCase
         $events = $currentCity->moveAlienTo($nextCity);
         $this->assertEquals(
             [
-                'Alien 1 moved to city C',
+                'Alien 1 left city B',
+                'Alien 1 reached city C',
             ],
             $events
         );
@@ -76,7 +78,8 @@ class City
         $nextCity->alien = $this->alien;
         $this->alien = null;
         return [
-            "Alien {$nextCity->alien} moved to city $nextCity",
+            "Alien {$nextCity->alien} left city {$this}",
+            "Alien {$nextCity->alien} reached city {$nextCity}",
         ];
     }
 }
