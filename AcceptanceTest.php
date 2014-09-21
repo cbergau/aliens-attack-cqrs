@@ -119,7 +119,7 @@ class City
     {
         return [
             "Alien {$incoming} fights Alien {$this->alien} in city {$this}",
-            //'Alien Vagrant has won the possession of city B',
+            "Alien {$incoming} has won the possession of city {$this}",
         ];
     }
 }
