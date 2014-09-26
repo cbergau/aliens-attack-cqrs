@@ -54,7 +54,6 @@ class AlienHelper
     public function movesTo($cityName)
     {
         $city = $this->context->cities[$cityName]; 
-        var_Dump($this->context->events);
     }
 }
 
@@ -62,9 +61,13 @@ class CityInhabitantsProjection
 {
     private $alienToCity;
 
-    public function accept($event)
+    public function accept($events)
     {
-        
+        foreach ($events as $event) {
+            if ($event instanceof AlienLanded) {
+                $this->alienToCity[$event->alien()] = $event->city();
+            } 
+        }
     }
 }
 
@@ -164,7 +167,7 @@ class City
     {
         $this->alien = $alien;
         return [
-            new AlienLanded($alien, $this)
+            new AlienLanded((string) $alien, $this)
         ];    
     }
 
@@ -209,13 +212,23 @@ class Alien
 
 class AlienLanded
 {
-    private $alien;
+    private $alienName;
     private $cityName;
     
-    public function __construct(Alien $alien, $cityName)
+    public function __construct($alienName, $cityName)
     {
-        $this->alien = $alien;
+        $this->alienName = $alienName;
         $this->cityName = $cityName;
+    }
+
+    public function alien()
+    {
+        return $this->alienName;
+    }
+
+    public function city()
+    {
+        return $this->cityName;
     }
 
     public function __toString()
