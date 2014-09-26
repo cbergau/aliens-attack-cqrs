@@ -32,6 +32,15 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->projection = new CityInhabitantsProjection(); 
+        $this->eventsThatGenerateNewCommands = [
+            'AlienReachedCity' => function($event) {
+                return function() {
+                    // find alien
+                    // find city
+                    $city->alienArrives($alien);
+                };
+            }
+        ];
     }
 
     public function accept($event)
