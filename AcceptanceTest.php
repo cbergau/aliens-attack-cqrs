@@ -46,9 +46,8 @@ class AlienHelper
     {
         $city = new City($cityName); 
         $this->context->cities[$cityName] = $city;
-        $events = $city->placeAlien($this->alien);
-        $this->context->events = array_merge($this->context->events, $events);
-        $this->context->projection->accept($events);
+        $this->registerEvents($city->placeAlien($this->alien));
+
     }
 
     public function movesTo($cityName)
@@ -56,8 +55,13 @@ class AlienHelper
         $currentCity = $this->context->projection->whereIs($this->alien->__toString());
         $nextCity = $this->context->cities[$cityName]; 
 
-        $events = $currentCity->moveAlienTo($nextCity);
-        var_dump($events);
+        $this->registerEvents($currentCity->moveAlienTo($nextCity));
+    }
+
+    private function registerEvents($events)
+    {
+        $this->context->events = array_merge($this->context->events, $events);
+        $this->context->projection->accept($events);
     }
 }
 
