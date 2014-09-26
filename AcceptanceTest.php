@@ -9,7 +9,7 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
 
         $this->whenAlien(1)->movesTo('B');
 
-        //$this->thenAlien(2)->dies();
+        $this->thenAlien(2)->dies();
         //$this->thenAlien(1)->hasTakenPossessionOf('B');
     }
 
@@ -20,6 +20,11 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
     }
 
     private function whenAlien($name)
+    {
+        return $this->alienHelpers[$name];
+    }
+
+    private function thenAlien($name)
     {
         return $this->alienHelpers[$name];
     }
@@ -56,6 +61,19 @@ class AlienHelper
         $nextCity = $this->context->cities[$cityName]; 
 
         $this->registerEvents($currentCity->moveAlienTo($nextCity));
+    }
+
+    public function dies()
+    {
+        foreach ($this->context->events as $event)
+        {
+            if ($event instanceof AlienDead) {
+                if ($event->alien() == $this->alien->__toString()) {
+                    return;
+                }
+            }
+        }
+        $this->context->fail("Alien {$this->alien} is not dead.");
     }
 
     private function registerEvents($events)
