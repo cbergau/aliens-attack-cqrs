@@ -34,6 +34,12 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
         $this->projection = new CityInhabitantsProjection(); 
     }
 
+    public function accept($event)
+    {
+        $this->events[] = $event;
+        $this->projection->accept($event);
+    }
+
     public $events = [];
 }
 
@@ -78,8 +84,9 @@ class AlienHelper
 
     private function registerEvents($events)
     {
-        $this->context->events = array_merge($this->context->events, $events);
-        $this->context->projection->accept($events);
+        foreach ($events as $event) {
+            $this->context->accept($event);
+        }
     }
 }
 
@@ -87,12 +94,10 @@ class CityInhabitantsProjection
 {
     private $alienToCity;
 
-    public function accept($events)
+    public function accept($event)
     {
-        foreach ($events as $event) {
-            if ($event instanceof AlienLanded) {
-                $this->alienToCity[$event->alien()] = $event->city();
-            } 
+        if ($event instanceof AlienLanded) {
+            $this->alienToCity[$event->alien()] = $event->city();
         }
     }
 
