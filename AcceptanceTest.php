@@ -53,7 +53,11 @@ class AlienHelper
 
     public function movesTo($cityName)
     {
-        $city = $this->context->cities[$cityName]; 
+        $currentCity = $this->context->projection->whereIs($this->alien->__toString());
+        $nextCity = $this->context->cities[$cityName]; 
+
+        $events = $currentCity->moveAlienTo($nextCity);
+        var_dump($events);
     }
 }
 
@@ -68,6 +72,11 @@ class CityInhabitantsProjection
                 $this->alienToCity[$event->alien()] = $event->city();
             } 
         }
+    }
+
+    public function whereIs($alienName)
+    {
+        return $this->alienToCity[$alienName];
     }
 }
 
