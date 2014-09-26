@@ -1,5 +1,57 @@
 <?php
 
+class AcceptanceTest extends PHPUnit_Framework_TestCase
+{
+    public function testAlienFight()
+    {
+        $this->givenAlien(1)->atCity('A');
+        $this->givenAlien(2)->atCity('B');
+
+        $this->whenAlien(1)->movesTo('B');
+
+        $this->thenAlien(2)->dies();
+        $this->thenAlien(1)->hasTakenPossessionOf('B');
+    }
+
+    private function givenAlien($name)
+    {
+        $this->alienHelpers[$name] = new AlienHelper(new Alien($name), $this);
+        return $this->alienHelpers[$name];
+    }
+
+    private function whenAlien($name)
+    {
+        return $this->alienHelpers[$name];
+    }
+
+    public $events = [];
+}
+
+class AlienHelper
+{
+    private $alien;
+    
+    public function __construct(Alien $alien, $context)
+    {
+        $this->alien = $alien;
+        $this->context = $context;
+    }
+
+    public function atCity($cityName)
+    {
+        $city = new City($cityName); 
+        $this->context->cities[$cityName] = $city;
+        $events = $city->placeAlien($this->alien);
+        $this->context->events = array_merge($this->context->events, $events);
+    }
+
+    public function movesTo($cityName)
+    {
+        $city = $this->context->cities[$cityName]; 
+        var_Dump($this->context->events);
+    }
+}
+
 class CityTest extends PHPUnit_Framework_TestCase
 {
     public function testAliensStartFromACity()
