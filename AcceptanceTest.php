@@ -10,7 +10,7 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
         $this->whenAlien(1)->movesTo('B');
 
         $this->thenAlien(2)->dies();
-        //$this->thenAlien(1)->hasTakenPossessionOf('B');
+        $this->thenAlien(1)->isAt('B');
     }
 
     private function givenAlien($name)
@@ -126,7 +126,7 @@ class CityTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'Alien 1 left city A',
-                'Alien 1 reached city B',
+                new AlienReachedCity(1, 'B'),
             ],
             $events
         );
@@ -144,7 +144,7 @@ class CityTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'Alien 1 left city B',
-                'Alien 1 reached city C',
+                new AlienReachedCity(1, 'C'),
             ],
             $events
         );
@@ -214,7 +214,7 @@ class City
         $this->alien = null;
         return [
             "Alien {$nextCity->alien} left city {$this}",
-            "Alien {$nextCity->alien} reached city {$nextCity}",
+            new AlienReachedCity($nextCity->alien->__toString(), $nextCity->__toString()),
         ];
     }
 
@@ -287,6 +287,34 @@ class AlienDead
     public function __toString()
     {
         return "Alien {$this->alien} is dead, Jim";
+    }
+}
+
+
+class AlienReachedCity
+{
+    private $alienName;
+    private $cityName;
+    
+    public function __construct($alienName, $cityName)
+    {
+        $this->alienName = $alienName;
+        $this->cityName = $cityName;
+    }
+
+    public function alien()
+    {
+        return $this->alienName;
+    }
+
+    public function city()
+    {
+        return $this->cityName;
+    }
+
+    public function __toString()
+    {
+        return "Alien {$this->alienName} reached city {$this->cityName}";
     }
 }
 
