@@ -110,7 +110,7 @@ class CityTest extends PHPUnit_Framework_TestCase
         $events = $city->placeAlien(new Alien(1));
         $this->assertEquals(
             [
-                'Alien 1 starts at A',
+                new AlienLanded(1, 'A')
             ],
             $events
         );
@@ -172,6 +172,7 @@ class CityTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'Alien Vagrant fights Alien Resident in city B',
+                new AlienDead('Resident'),
                 'Alien Vagrant has won the possession of city B from Resident',
             ],
             $events
@@ -221,6 +222,7 @@ class City
     {
         return [
             "Alien {$incoming} fights Alien {$this->alien} in city {$this}",
+            new AlienDead($this->alien),
             "Alien {$incoming} has won the possession of city {$this} from {$this->alien}",
         ];
     }
@@ -265,6 +267,26 @@ class AlienLanded
     public function __toString()
     {
         return "Alien {$this->alien} starts at {$this->cityName}";
+    }
+}
+
+class AlienDead
+{
+    private $alienName;
+    
+    public function __construct($alienName)
+    {
+        $this->alienName = $alienName;
+    }
+
+    public function alien()
+    {
+        return $this->alienName;
+    }
+
+    public function __toString()
+    {
+        return "Alien {$this->alien} is dead, Jim";
     }
 }
 
