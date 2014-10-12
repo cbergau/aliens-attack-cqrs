@@ -9,3 +9,8 @@ Current task: Domain Modeling
 Features
 - Aliens move at random between connected cities
 - Aliens win at random
+
+Improvement points for the next round
+- Is there a way to make the resolution of Alien conflicts more robust? The projection may not be updated, but at least it is very clear which events influence it.
+- Is it possible to use the emitted events to change the state of the current aggregate, moving towards Event Sourcing?
+- How can you prototype different aggregate designs and their respective events in a faster way? Event Storming? Paper?
