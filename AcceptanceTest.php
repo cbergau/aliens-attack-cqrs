@@ -113,8 +113,9 @@ class AlienHelper
     public function isAt($city)
     {
         $currentCity = $this->context->projection->whereIs($this->alien->__toString());
-        var_Dump($currentCity);
-        var_dump($city);
+        if ($currentCity != $city) {
+            throw new Exception("Alien {$this->alien} should be at $city but it is at {$currentCity}");
+        }
     }
 
     private function registerEvents($events)
@@ -134,7 +135,9 @@ class CityInhabitantsProjection
         if ($event instanceof AlienLanded) {
             $this->alienToCity[$event->alien()] = $event->city();
         }
-        var_Dump($event);
+        if ($event instanceof AlienWonCity) {
+            $this->alienToCity[$event->alien()] = $event->city();
+        }
     }
 
     public function whereIs($alienName)
@@ -201,6 +204,23 @@ class CityTest extends PHPUnit_Framework_TestCase
         $currentCity->moveAlienTo(new City('C'));
     }
 
+    public function testAnAlienArrivingAtAnOccupiedCityDoesNotImmediatelyReplaceOrFight()
+    {
+        $currentCity = new City('A');
+        $currentCity->placeAlien(new Alien('Vagrant'));
+        $occupiedCity = new City('B');
+        $occupiedCity->placeAlien(new Alien('Resident'));
+        $events = $currentCity->moveAlienTo($occupiedCity);
+
+        $this->assertEquals(
+            [
+                'Alien Vagrant left city A',
+                new AlienReachedCity('Vagrant', 'B'),
+            ],
+            $events
+        );
+    }
+
     public function testAnAlienArrivingAtAnOccupiedCityFightsWithAnotherAlien()
     {
         $currentCity = new City('A');
@@ -249,13 +269,14 @@ class City
         if (!$this->alien) {
             throw new AlienNotPresent($nextCity);
         }
+        $movingAlien = $this->alien;
         if (!$nextCity->alien) {
             $nextCity->alien = $this->alien;
         }
         $this->alien = null;
         return [
-            "Alien {$nextCity->alien} left city {$this}",
-            new AlienReachedCity($nextCity->alien->__toString(), $nextCity->__toString()),
+            "Alien {$movingAlien} left city {$this}",
+            new AlienReachedCity($movingAlien->__toString(), $nextCity->__toString()),
         ];
     }
 
