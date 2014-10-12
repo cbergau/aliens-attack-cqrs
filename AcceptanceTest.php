@@ -34,10 +34,14 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
         $this->projection = new CityInhabitantsProjection(); 
         $this->eventsThatGenerateNewCommands = [
             'AlienReachedCity' => function($event) {
-                return function() {
-                    // find alien
-                    // find city
-                    $city->alienArrives($alien);
+                return function() use ($event) {
+                    var_Dump($event);
+                    $city = $this->cities[$event->city()];
+                    $alien = $this->alienHelpers[$event->alien()]->alien();
+                    $events = $city->alienArrives($alien);
+                    foreach ($events as $event) {
+                        $this->accept($event);
+                    }
                 };
             }
         ];
@@ -47,9 +51,20 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
     {
         $this->events[] = $event;
         $this->projection->accept($event);
+        if (is_object($event)) {
+            $eventClass = get_class($event);
+            if (isset($this->eventsThatGenerateNewCommands[$eventClass])) {
+                $newCommand = call_user_func(
+                    $this->eventsThatGenerateNewCommands[$eventClass],
+                    $event
+                );
+                $newCommand();
+            }
+        }
     }
 
     public $events = [];
+    public $cities = [];
 }
 
 class AlienHelper
@@ -60,6 +75,11 @@ class AlienHelper
     {
         $this->alien = $alien;
         $this->context = $context;
+    }
+
+    public function alien()
+    {
+        return $this->alien;
     }
 
     public function atCity($cityName)
