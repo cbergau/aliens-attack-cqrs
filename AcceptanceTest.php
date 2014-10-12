@@ -35,7 +35,6 @@ class AcceptanceTest extends PHPUnit_Framework_TestCase
         $this->eventsThatGenerateNewCommands = [
             'AlienReachedCity' => function($event) {
                 return function() use ($event) {
-                    var_Dump($event);
                     $city = $this->cities[$event->city()];
                     $alien = $this->alienHelpers[$event->alien()]->alien();
                     $events = $city->alienArrives($alien);
@@ -111,6 +110,13 @@ class AlienHelper
         $this->context->fail("Alien {$this->alien} is not dead.");
     }
 
+    public function isAt($city)
+    {
+        $currentCity = $this->context->projection->whereIs($this->alien->__toString());
+        var_Dump($currentCity);
+        var_dump($city);
+    }
+
     private function registerEvents($events)
     {
         foreach ($events as $event) {
@@ -128,6 +134,7 @@ class CityInhabitantsProjection
         if ($event instanceof AlienLanded) {
             $this->alienToCity[$event->alien()] = $event->city();
         }
+        var_Dump($event);
     }
 
     public function whereIs($alienName)
@@ -207,7 +214,7 @@ class CityTest extends PHPUnit_Framework_TestCase
             [
                 'Alien Vagrant fights Alien Resident in city B',
                 new AlienDead('Resident'),
-                'Alien Vagrant has won the possession of city B from Resident',
+                new AlienWonCity('Vagrant', 'B'),
             ],
             $events
         );
@@ -257,7 +264,7 @@ class City
         return [
             "Alien {$incoming} fights Alien {$this->alien} in city {$this}",
             new AlienDead($this->alien),
-            "Alien {$incoming} has won the possession of city {$this} from {$this->alien}",
+            new AlienWonCity((string) $incoming, (string) $this, (string) $this->alien),
         ];
     }
 }
@@ -301,6 +308,33 @@ class AlienLanded
     public function __toString()
     {
         return "Alien {$this->alien} starts at {$this->cityName}";
+    }
+}
+
+class AlienWonCity
+{
+    private $alienName;
+    private $cityName;
+    
+    public function __construct($alienName, $cityName)
+    {
+        $this->alienName = $alienName;
+        $this->cityName = $cityName;
+    }
+
+    public function alien()
+    {
+        return $this->alienName;
+    }
+
+    public function city()
+    {
+        return $this->cityName;
+    }
+
+    public function __toString()
+    {
+        return "Alien {$this->alien} has won the possession of {$this->cityName}";
     }
 }
 
